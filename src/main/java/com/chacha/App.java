@@ -1,8 +1,10 @@
 package com.chacha;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 public class App {
 
@@ -52,9 +54,15 @@ public class App {
     void actionList() {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
-        for (WiseSaying w : list) {
-            System.out.println(w.getId() + " / " + w.getAuthor() + " / " + w.getContent());
-        }
+//        for (WiseSaying w : list) {
+//            System.out.println(w.getId() + " / " + w.getAuthor() + " / " + w.getContent());
+//        }
+        IntStream.range(0, list.size())
+                .map(i ->list.size() -1 -i)
+                .mapToObj(list::get)
+                .forEach(ws -> System.out.println(
+                        ws.getId() + " / " + ws.getAuthor() + " / " + ws.getContent()
+                ));
     }
 
     void actionDelete(String cmd) {
@@ -70,9 +78,7 @@ public class App {
 
     void delete(WiseSaying wiseSaying) {
         list.remove(wiseSaying); // 객체 값으로 삭제
-//        boolean removed = list.removeIf(w -> w.getId() == id);
-//        if (removed) System.out.println(id + "번 명언이 삭제되었습니다.");
-//        else System.out.println(id + "번 명언은 존재하지 않습니다");
+        // list.removeIf(ws -> ws.getId() == wiseSaying.getId());
     }
 
     void actionModify(String cmd) {
@@ -100,26 +106,47 @@ public class App {
 
     // id로 WiseSaying 객체 찾기
     WiseSaying findById(int id) {
-        WiseSaying wiseSaying = null;
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getId() == id) {
-                wiseSaying = list.get(i);
-            }
-        }
-        if (wiseSaying == null) {
-            System.out.println(id + "번 명언은 존재하지 않습니다.");
+//        WiseSaying wiseSaying = null;
+//        for (int i = 0; i < list.size(); i++) {
+//            if (list.get(i).getId() == id) {
+//                wiseSaying = list.get(i);
+//            }
+//        }
+//        if (wiseSaying == null) {
+//            System.out.println(id + "번 명언은 존재하지 않습니다.");
+//            return null;
+//        }
+//        return wiseSaying;
+        // 1. 스트림 생성
+        // 2. 필터링
+        // 3. 첫 번째 요소 찾아서 Optional 객체로 감싸서 반환
+        // (Optional 객체는 값이 없을 수도 있을 수도 있음)
+        // 4. Optional 객체가 있으면 그대로 반환, 없으면 람다식 실행
+        return list.stream()
+                .filter(ws->ws.getId()==id)
+                .findFirst()
+                .orElseGet(() -> {
+            System.out.println("해당 아이디는 존재하지 않습니다");
             return null;
-        }
-        return wiseSaying;
+        });
     }
 
     int CmdSplitId(String cmd) {
-        String[] cmdBits = cmd.split("="); // 삭제?id=1
-
-        if (cmdBits.length < 2 || cmdBits[1].isEmpty()) {
-            System.out.println("id를 입력해주세요.");
-            return -1;
-        }
-        return Integer.parseInt(cmdBits[1]);
+//        String[] cmdBits = cmd.split("="); // 삭제?id=1
+//
+//        if (cmdBits.length < 2 || cmdBits[1].isEmpty()) {
+//            System.out.println("id를 입력해주세요.");
+//            return -1;
+//        }
+//        return Integer.parseInt(cmdBits[1]);
+        return Arrays.stream(cmd.split("="))
+                .skip(1)
+                .findFirst()
+                .filter(s-> !s.isEmpty())
+                .map(Integer::parseInt)
+                .orElseGet(() -> {
+                    System.out.println("id를 입력해주세요.");
+                    return -1;
+                });
     }
 }
