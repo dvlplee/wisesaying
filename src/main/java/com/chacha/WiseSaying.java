@@ -1,7 +1,7 @@
 package com.chacha;
 
 public class WiseSaying {
-    private int id;
+    private final int id;
     private String author;
     private String content;
 

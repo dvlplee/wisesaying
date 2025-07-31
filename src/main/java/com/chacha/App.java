@@ -6,10 +6,9 @@ import java.util.Scanner;
 import java.util.stream.IntStream;
 
 public class App {
-
     Scanner scanner = new Scanner(System.in);
     int lastId = 0;
-    List<WiseSaying> list = new ArrayList<>();
+    private final List<WiseSaying> list = new ArrayList<>();
 
     void run() {
         System.out.println("==명언 앱==");
@@ -63,7 +62,7 @@ public class App {
 //            System.out.println(w.getId() + " / " + w.getAuthor() + " / " + w.getContent());
 //        }
         IntStream.range(0, list.size())
-                .map(i -> list.size() - 1 - i)
+                //.map(i -> list.size() - 1 - i) // 0~3   3 2 1 0
                 .mapToObj(list::get)
                 .forEach(ws -> System.out.println(
                         ws.getId() + " / " + ws.getAuthor() + " / " + ws.getContent()
