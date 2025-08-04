@@ -1,25 +1,16 @@
 package com.chacha.domain.wiseSaying;
 
+import com.chacha.AppContext;
 import com.chacha.WiseSaying;
+import com.chacha.domain.wiseSaying.WiseSayingRepository;
 
 import java.util.List;
 
 public class WiseSayingService {
-    private final WiseSayingRepository wiseSayingRepository;
-
-    WiseSayingService() {
-        this.wiseSayingRepository = new WiseSayingRepository();
-    }
+    private final WiseSayingRepository wiseSayingRepository = AppContext.wiseSayingRepository;
 
     public List<WiseSaying> getWiseSayingList() {
         return this.wiseSayingRepository.getWiseSayingList();
-    }
-
-    public WiseSaying write(String author, String content) {
-
-        WiseSaying wiseSaying  = this.wiseSayingRepository.write(author, content);
-
-        return wiseSaying;
     }
 
     public void delete(WiseSaying wiseSaying) {
@@ -27,10 +18,20 @@ public class WiseSayingService {
     }
 
     void modify(WiseSaying wiseSaying, String content, String author) {
-        this.wiseSayingRepository.modify(wiseSaying, content, author);
+        wiseSaying.setAuthor(author);
+        wiseSaying.setContent(content);
+        this.wiseSayingRepository.save(wiseSaying);
     }
 
     WiseSaying findById(int id) {
         return this.wiseSayingRepository.findById(id);
+    }
+
+    public WiseSaying write(String author, String content) {
+        WiseSaying wiseSaying = new WiseSaying(author, content);
+
+        this.wiseSayingRepository.save(wiseSaying);
+
+        return wiseSaying;
     }
 }

@@ -1,19 +1,15 @@
 package com.chacha.domain.wiseSaying;
 
+import com.chacha.AppContext;
 import com.chacha.Rq;
 import com.chacha.WiseSaying;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class WiseSayingController {
-    private final Scanner scanner;
-    private final WiseSayingService wiseSayingService;
-    public WiseSayingController(Scanner scanner) {
-        this.scanner = scanner;
-        this.wiseSayingService = new WiseSayingService();
-    }
+    private final Scanner scanner = AppContext.scanner;
+    private final WiseSayingService wiseSayingService = AppContext.wiseSayingService;
 
     public void actionWrite() {
         System.out.print("명언: ");
@@ -27,16 +23,14 @@ public class WiseSayingController {
         System.out.println("%d번 명언이 등록되었습니다.".formatted(wiseSaying.getId()));
     }
 
-
-
     public void actionList() {
-        List<WiseSaying> wiseSayingList = wiseSayingService.getWiseSayingList();
-        System.out.println("번호 / 작가 / 명언");
-        System.out.println("----------------------");
+        List<WiseSaying> wiseSayingList  = wiseSayingService.getWiseSayingList();
 
-        for (int i = 0; i <= wiseSayingList.size() - 1; i++) {
+        System.out.println("번호 / 작가 / 명언 / 작성 / 수정");
+        System.out.println("----------------------");
+        for (int i = wiseSayingList.size() - 1; i >= 0; i--) {
             WiseSaying wiseSaying = wiseSayingList.get(i);
-            System.out.println("%d / %s / %s".formatted(wiseSaying.getId(), wiseSaying.getAuthor(), wiseSaying.getContent()));
+            System.out.println("%d / %s / %s / %s / %s".formatted(wiseSaying.getId(), wiseSaying.getAuthor(), wiseSaying.getContent(), wiseSaying.getForPrintCreateDate(), wiseSaying.getForPrintModifyDate()));
         }
     }
 
@@ -58,7 +52,6 @@ public class WiseSayingController {
 
         System.out.println("%d번 명언이 삭제되었습니다.".formatted(id));
     }
-
 
 
     public void actionModify(Rq rq) {
@@ -87,6 +80,5 @@ public class WiseSayingController {
 
         System.out.println("%d번 명언이 수정 되었습니다.".formatted(id));
     }
-
 
 }

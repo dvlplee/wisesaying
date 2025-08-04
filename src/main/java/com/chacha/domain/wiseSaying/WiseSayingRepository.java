@@ -2,6 +2,7 @@ package com.chacha.domain.wiseSaying;
 
 import com.chacha.WiseSaying;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,21 +14,8 @@ public class WiseSayingRepository {
         return wiseSayingList;
     }
 
-    public WiseSaying write(String author, String content) {
-        WiseSaying wiseSaying = new WiseSaying(++lastId, author, content);
-
-        wiseSayingList.add(wiseSaying);
-
-        return wiseSaying;
-    }
-
     public void delete(WiseSaying wiseSaying) {
         wiseSayingList.remove(wiseSaying);
-    }
-
-    void modify(WiseSaying wiseSaying, String content, String author) {
-        wiseSaying.setContent(content);
-        wiseSaying.setAuthor(author);
     }
 
     WiseSaying findById(int id) {
@@ -38,5 +26,18 @@ public class WiseSayingRepository {
                     System.out.println("해당 아이디는 존재하지 않습니다.");
                     return null;
                 });
+    }
+
+    public void save(WiseSaying wiseSaying) {
+        LocalDateTime now = LocalDateTime.now();
+        // 등록
+        if (wiseSaying.isNew()) {
+            wiseSaying.setId(++lastId);
+            wiseSaying.setCreateDate(now);
+            wiseSaying.setModifyDate(now);
+            wiseSayingList.add(wiseSaying);
+        } else { // 수정
+            wiseSaying.setModifyDate(now);
+        }
     }
 }
